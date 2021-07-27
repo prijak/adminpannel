@@ -1,0 +1,111 @@
+define([
+    'jquery',
+    ], function($) {
+        return {
+            pincodeData: function(ajaxurl, product_id) {
+                $(document).on('keyup', '#pincode_number', function (event) {
+                    event.preventDefault();
+                    var pincode = $(this).val();
+                    var current_sku = $('.product.attribute.sku .value').text();
+
+                    if(pincode.length >= 6)
+                    {
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            showLoader: true,
+                            dataType: 'json',
+                            data: { pincode: pincode, product_id: product_id, sku:current_sku },
+                            success : function(data) {
+
+                                if(data['pincodeFound'] == 0){
+                                    var errormsg = 'Please enter valid pincode';
+                                    $('.checkTxt').html(errormsg);
+                                    $('input[id=pincode_number]').val('');
+                                    return;
+                                    }
+
+                                    $('.checkTxt').html(data['message']);
+                                    if(data['success'] == "true" || data['success'] == "false")
+                                    {
+                                        $(".check-product-availability input").hide();
+                                        $(".check-product-availability h3").hide();
+                                /*if($(".product-dinner-options .add-to-cart-form-detail").length)
+                                    $(".product-dinner-options .add-to-cart-form-detail").show();
+                                else
+                                    $(".product-add-form").show();*/
+                            }
+                            $("#product-addtocart-button span").text('ADD TO CART');
+                            $("#product-addtocart-button").removeAttr("disabled");
+                            $("#buy-now").text('BUY NOW');
+                            $('#buy-now').removeClass('notifyme');
+                             // For Bundle product
+                             $("#buy-now span").text('BUY NOW');
+                             $(".starter-kit-product-info-add-to-cart .product-details .box-tocart #product-addtocart-button").removeAttr("disabled");
+
+
+                             if(data['isInStock'] == 0){
+                                $("#product-addtocart-button").attr("disabled", true);
+                                $("#product-addtocart-button span").text('SOLD OUT');
+                                $('#buy-now').addClass('notifyme');
+                                $("#buy-now").text('NOTIFY ME');
+                                // For Bundle product
+                                $("#buy-now span").text('NOTIFY ME');
+                                $(".starter-kit-product-info-add-to-cart .product-details .box-tocart #product-addtocart-button").attr("disabled", true);
+                            }
+                        },
+                        error : function(request, error) {
+                            var errormsg = 'Please enter valid pincode';
+                            $('.checkTxt').html(errormsg);
+                            $('input[id=pincode_number]').val('');
+                        }
+                    });
+                    }
+                });
+                $(document).on("click",".pincode-search-visible", function(){
+                    $(".check-product-availability input").show();
+                //$(".check-product-availability input").val("");
+                $(".check-product-availability h3").show();
+                $(".check-product-availability .checkTxt").html("");
+                /*if($(".product-dinner-options .add-to-cart-form-detail").length)
+                    $(".product-dinner-options .add-to-cart-form-detail").hide();
+                else
+                    $(".product-add-form").hide();*/
+            })
+
+                $(document).on("mouseenter", ".pincode-search-help", function(event){
+                    if($('.picode-popup-text').hasClass('hide'))
+                    {
+                        $('.picode-popup-text').removeClass('hide');
+                        $('.picode-popup-text').addClass('show');
+                    }
+                })
+
+                $(document).on("mouseleave", ".pincode-search-help", function(event){
+                    if($('.picode-popup-text').hasClass('show'))
+                    {
+                        $('.picode-popup-text').removeClass('show');
+                        $('.picode-popup-text').addClass('hide');
+                    }
+
+                })
+
+                $(document).on("mouseenter", ".pincode-search-help-2", function(event){
+                    if($('.picode-popup-text-2').hasClass('hide'))
+                    {
+                        $('.picode-popup-text-2').removeClass('hide');
+                        $('.picode-popup-text-2').addClass('show');
+                    }
+                })
+
+                $(document).on("mouseleave", ".pincode-search-help-2", function(event){
+                    if($('.picode-popup-text-2').hasClass('show'))
+                    {
+                        $('.picode-popup-text-2').removeClass('show');
+                        $('.picode-popup-text-2').addClass('hide');
+                    }
+
+                })
+            }
+        }
+    });

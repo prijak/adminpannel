@@ -1,0 +1,52 @@
+/*
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_Popuplogin
+ * @copyright   Copyright (c) 2019 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+define([], function () {
+    'use strict';
+
+    if (typeof window.plumrocket === 'undefined') {
+        window.plumrocket = {};
+    }
+
+    var popupLoginControl = {
+        _popupLogin: null,
+        openForm: function (formId) {
+            this._popupLogin.showPopupLogin(formId);
+        },
+        openDefaultForm: function () {
+            this._popupLogin.showPopupLogin();
+        },
+        openLoginForm: function () {
+            this._popupLogin.showPopupLogin('prpl-login');
+        },
+        openRegistrationForm: function () {
+            this._popupLogin.showPopupLogin('prpl-registration');
+        },
+        openForgotPasswordForm: function () {
+            this._popupLogin.showPopupLogin('prpl-forgotpassword');
+        },
+        closeForm: function () {
+            this._popupLogin.closeForm();
+        },
+        setPopupLogin: function (popupLogin) {
+            this._popupLogin = popupLogin;
+        },
+    };
+
+    window.plumrocket.popupLoginControl = popupLoginControl;
+
+    return popupLoginControl;
+});

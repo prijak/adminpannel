@@ -1,0 +1,115 @@
+require([
+    'jquery',
+    'mage/url'
+    ], function ($,url) {
+
+
+        $(document).ready(checkContainer);
+
+        function checkContainer () {
+          if($("[name='postcode']").is(':visible') && $.cookie != undefined) { 
+            var zipcode = $.cookie('pincode_cookie');
+            setzipcode(zipcode);
+        } else {
+            setTimeout(checkContainer, 1000);
+        }
+    }
+
+
+    function setzipcode(zipvalue){
+        if(zipvalue && zipvalue.length > 5)
+        {
+            var customurl = url.build('pincode/index/index/');
+            //$('body').trigger('processStart');
+            $.ajax({
+                url: customurl,
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    zipcode: zipvalue
+                },
+                complete: function(response) {  
+                    //$('body').trigger('processStop');  
+                    
+                    if(response.responseJSON)
+                    {
+                        var state = response.responseJSON.state;         
+                        var city = response.responseJSON.city;  
+                        
+                        $("[name='postcode']").val(zipvalue); 
+                        $("[name='region_id']").val(state); 
+                        $("[name='city']").val(city);  
+                        $("[name='postcode']").trigger("change");
+                        $("[name='region_id']").trigger("change");
+                        $("[name='city']").trigger("change");
+                    }
+                    else
+                    {
+                        $("[name='postcode']").val('');
+                        $("[name='region_id']").val(''); 
+                        $("[name='city']").val('');
+                        $("[name='postcode']").trigger("change");
+                        $("[name='region_id']").trigger("change");
+                        $("[name='city']").trigger("change");            
+                    } 
+                },
+                error: function (xhr, status, errorThrown) {
+                    //$('body').trigger('processStop');
+
+                }
+            });
+
+        }
+    } // function end
+
+    $(document).on('keyup',"[name='postcode']",function(){
+     var zipvalue = $("[name='postcode']").val();
+
+     if(zipvalue.length > 5)
+     {
+        var customurl = url.build('pincode/index/index/');
+        $('body').trigger('processStart');
+        $.ajax({
+            url: customurl,
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                zipcode: zipvalue
+            },
+            complete: function(response) {  
+                $('body').trigger('processStop');  
+
+
+
+                if(response.responseJSON)
+                {
+                    var state = response.responseJSON.state;         
+                    var city = response.responseJSON.city;  
+
+                    $("[name='region_id']").val(state); 
+                    $("[name='city']").val(city);   
+                    $("[name='region_id']").trigger("change");
+                    $("[name='city']").trigger("change");         
+                }
+                else
+                {
+                    $("[name='region_id']").val(''); 
+                    $("[name='city']").val('');    
+                    $("[name='region_id']").trigger("change");
+                    $("[name='city']").trigger("change");        
+                }
+
+
+
+            },
+            error: function (xhr, status, errorThrown) {
+                $('body').trigger('processStop');
+
+            }
+        });
+
+    }
+
+
+});   
+});

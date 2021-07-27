@@ -1,0 +1,49 @@
+define([
+    'jquery','Magento_Ui/js/modal/modal','domReady!'
+], function ($,modal) {
+    "use strict";
+    return function (config, element) {
+        $(element).click(function () {
+
+
+            var pincode = $('input[id=pincode_number]').val();
+             if(pincode.length < 6 || pincode.length == 0)
+             {
+                 $('#pincode_number').focus();
+                 $('.checkTxt').html('You need to enter your pincode before buy this product, so we can ensure that there are no surprises when you checkout!');
+                 return false;
+             }
+
+            var form = $(config.form);
+            var baseUrl = form.attr('action'),
+            buyNowUrl = baseUrl.replace('checkout/cart/add', 'buynow/cart/add');
+            if ($("#buy-now").hasClass("notifyme")) {
+                var optionProductId = $('.swatch-option.text.selected').attr('option-product-id');
+           
+                if (typeof optionProductId !== typeof undefined && optionProductId !== false) {
+                    var product_id = optionProductId;
+                } else {
+                    var product_id = $('input[name=product]').val();
+                }
+                $("#product").val(product_id);
+                var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    buttons: false,
+                    modalClass: 'notify-stock-popup',
+                    title: "In Stock Notification"
+                };
+                var popup = modal(options, $('#notify-popup'));
+                $("#notify-popup").modal("openModal");
+                return false;
+            } else {
+                form.attr('action', buyNowUrl);
+                form.trigger('submit');
+                form.attr('action', baseUrl);
+                return false; 
+            }
+           
+        });
+    }
+});

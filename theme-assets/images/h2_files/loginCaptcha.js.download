@@ -1,0 +1,66 @@
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_PopupLogin
+ * @copyright   Copyright (c) 2019 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+
+define(
+    [
+        'jquery',
+        'ko',
+        'Magento_Captcha/js/view/checkout/defaultCaptcha',
+        'Magento_Captcha/js/model/captchaList',
+        'Plumrocket_Popuplogin/js/action/login'
+    ],
+    function (
+        $,
+        ko,
+        defaultCaptcha,
+        captchaList,
+        loginAction
+    ) {
+        'use strict';
+
+        return defaultCaptcha.extend({
+            /** @inheritdoc */
+            initialize: function () {
+                var self = this;
+
+                this._super();
+                self.currentCaptcha = captchaList.getCaptchaByFormId(this.formId);
+
+                if (self.currentCaptcha != null) {
+                    self.currentCaptcha.setIsVisible(self.currentCaptcha.getIsRequired());
+                    this.setCurrentCaptcha(self.currentCaptcha);
+                    self.refresh();
+
+                    loginAction.registerCallback(function (loginData) {
+                        if (loginData.show_captcha) {
+                            self.currentCaptcha.setIsVisible(true);
+                        }
+
+                        self.currentCaptcha.refresh();
+                        $('#captcha_prpl_login_form').prop('disabled', false);
+                        $('#captcha_prpl_login_form').removeClass('_disabled');
+                        $('input[name="captcha_form_id"]').prop('disabled', false);
+                        $('input[name="captcha_form_id"]').removeClass('_disabled');
+                    });
+                }
+            },
+
+            isRequired: function () {
+                return this.currentCaptcha.getIsVisible();
+            }
+        });
+    }
+);

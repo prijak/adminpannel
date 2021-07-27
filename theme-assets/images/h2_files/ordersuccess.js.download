@@ -1,0 +1,60 @@
+require([
+    'jquery',
+    'mage/url'
+], function ($,url) { 
+    // order success page 
+    $(document).ready(function () {
+        $('#custom-form-order-page-button').click(function () { // The button type should be "button" and not submit
+            if ($('#custom-form-order-page').valid()) {
+                var password = $('.order-page-password').val();
+                var login = $('.order-page-login').prop('checked') ? 1 : 0;
+                var dob = $('.order-page-dob').val();
+                
+                if(password)
+                {
+                    var customurl = url.build('ordersuccess/order/index/');
+                    $('body').trigger('processStart');
+                    $.ajax({
+                        url: customurl,
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {
+                            password: password,
+                            login: login,
+                            dob: dob
+                        },
+                        complete: function(response) {  
+                            $('body').trigger('processStop');  
+                            
+
+                            if(response.responseJSON)
+                            {
+                                var errors = response.responseJSON.errors;         
+                                var massage = response.responseJSON.message;
+                                if(errors == false){
+                                    $('#order-suc-page-success').css('display','none');
+                                    $('#order-suc-page-failer').css('display','none');
+                                    $('#custom-form-order-page').css('display','none');
+                                    $('#order-suc-page-success').html(massage);
+                                    $('#order-suc-page-success').css('display','block');
+                                }
+                                else if(errors == true){
+                                    $('#order-suc-page-success').css('display','none');
+                                    $('#order-suc-page-failer').css('display','none');
+                                    $('#order-suc-page-failer').html(massage);
+                                    $('#order-suc-page-failer').css('display','block');
+                                }
+                            }
+                        },
+                        error: function (xhr, status, errorThrown) {
+                            $('body').trigger('processStop');                            
+                        }
+                    });
+
+               }
+                // return false;
+            }
+        });
+    });
+    // end
+});

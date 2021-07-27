@@ -1,0 +1,39 @@
+define([
+ 'ko',
+ 'uiComponent',
+ 'Magento_Customer/js/customer-data',
+ 'jquery'
+ ], function (ko, Component, customerData,$) {
+   'use strict';
+   var subtotalAmount;
+   var maxPrice = 100;
+   var percentage;
+   return Component.extend({
+     displaySubtotal: ko.observable(true),
+     maxprice: '$' + maxPrice.toFixed(2),
+           /**
+            * @override
+            */
+            initialize: function () {
+             this._super();
+             this.cart = customerData.get('cart');
+           },
+           isEnableFreeShipping:function () {
+            subtotalAmount = 0;
+            if(customerData.get('cart')().summary_count > 0){
+              customerData.get('cart')().items.forEach(function(element) {
+                subtotalAmount += element.product_price_value * element.qty;
+
+              });
+              if (subtotalAmount > 1000) {
+                $('.free-eligible').show();
+                $('.free-un-eligible').hide();
+              }
+              else{
+                $('.free-eligible').hide();
+                $('.free-un-eligible').show();
+              }
+            }
+          }
+        });
+ });

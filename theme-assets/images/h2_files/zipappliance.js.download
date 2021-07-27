@@ -1,0 +1,56 @@
+require([
+    'jquery',
+    'mage/url'
+    ], function ($,url) {
+
+    $("[name='pincode']").on('input',function(){
+     var zipvalue = $("[name='pincode']").val();
+
+     if(zipvalue.length > 5)
+     {
+        var customurl = url.build('/appliance/index/pincode/');
+        $('body').trigger('processStart');
+        $.ajax({
+            url: customurl,
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                zipcode: zipvalue
+            },
+            complete: function(response) {  
+                $('body').trigger('processStop');  
+
+
+
+                if(response.responseJSON)
+                {
+                    var state = response.responseJSON.state;         
+                    var city = response.responseJSON.city;  
+
+                    $("[name='state']").val(state); 
+                    $("[name='city']").val(city);   
+                    $("[name='state']").trigger("change");
+                    $("[name='city']").trigger("change");         
+                }
+                else
+                {
+                    $("[name='state']").val(''); 
+                    $("[name='city']").val('');    
+                    $("[name='state']").trigger("change");
+                    $("[name='city']").trigger("change");        
+                }
+
+
+
+            },
+            error: function (xhr, status, errorThrown) {
+                $('body').trigger('processStop');
+
+            }
+        });
+
+    }
+
+
+});   
+});

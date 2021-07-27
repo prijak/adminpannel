@@ -1,0 +1,381 @@
+/**
+ * Plumrocket Inc.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the End-user License Agreement
+ * that is available through the world-wide-web at this URL:
+ * http://wiki.plumrocket.net/wiki/EULA
+ * If you are unable to obtain it through the world-wide-web, please
+ * send an email to support@plumrocket.com so we can send you a copy immediately.
+ *
+ * @package     Plumrocket_SocialLoginPro
+ * @copyright   Copyright (c) 2019 Plumrocket Inc. (http://www.plumrocket.com)
+ * @license     http://wiki.plumrocket.net/wiki/EULA  End-user License Agreement
+ */
+define([
+    'ko',
+    'jquery',
+    'underscore',
+    'uiComponent',
+    'Magento_Ui/js/modal/modal',
+    'mage/translate',
+    'pslogin'
+], function (ko, $, _, Component, modal) {
+    'use strict';
+
+    return Component.extend({
+        defaults: {
+            template: 'Plumrocket_SocialLoginPro/popup/bind_email'
+        },
+
+        /**
+         * Popup will change by this variable
+         *
+         * 1 - "Email Missing" Popup
+         * 2 - "Email Exists" Popup
+         * 3 - "Success" Popup
+         * 4 - "Do you have an account?" Popup
+         * 5 - "Link to existing account" Popup
+         */
+        step: ko.observable(1),
+        showLoader: ko.observable(false),
+
+        customer: {
+            name: ko.observable(''),
+            email: ko.observable(''),
+        },
+        success: {
+            redirectUrl: '',
+            message: ko.observable(''),
+        },
+        error: ko.observable(''),
+
+        /**
+         * Social network type
+         */
+        type: '',
+
+        /**
+         * Networks already linked to account
+         */
+        linkedNetworksHtml: ko.observable(''),
+        loginNetworksButtonsHtml: ko.observable(''),
+
+        firstTitlePatter: $.mage.__('Welcome %1'),
+        secondTitlePatter: $.mage.__('Hello %1'),
+
+        alreadyRegisteredPattern: $.mage.__('An account with email ' +
+            '"%1" is already registered at %2. Please enter your store ' +
+            'password to link your social account. Or login using previously ' +
+            'used social networks.'),
+        alreadyRegisteredText: ko.observable(''),
+
+        errorMessageLifetime: 4000,
+        successRedirectDelay: 2000,
+
+        initialize: function () {
+            this._super();
+            document.pslogin = {bindEmail: this};
+            this.step.subscribe(this.afterSetStep.bind(this));
+            this.loginNetworksButtonsHtml(this.login_networks_buttons_html);
+        },
+
+        onRenderDone: function () {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: this.firstTitlePatter,
+                modalClass: 'ps-login-wrapper',
+                buttons: []
+            };
+
+            this.popup = $('#pslogin-bind-email-modal');
+            modal(options, this.popup);
+
+            /**
+             * We use custom loader for popup
+             * because loader widget mage-init not working in knockout
+             */
+            this.popup.on('processStart', function () {
+                this.showLoader(true);
+                return false;
+            }.bind(this));
+            this.popup.on('processStop', function () {
+                this.showLoader(false);
+                return false;
+            }.bind(this));
+        },
+
+        /**
+         * @param {string} name
+         * @param {string} email
+         * @param {string} type
+         * @param {int}    step
+         */
+        openPopup: function (name, email, type, step) {
+            this.setStep(step ? step : 1);
+
+            this.popup.modal('setTitle', this.applyTextToTranslate(this.firstTitlePatter, [name]));
+
+            this.customer.name(name);
+            this.customer.email(email);
+            this.customer.type = type;
+
+            this.renderError('');
+
+            this.closePrPopupLogin();
+
+            this.popup.modal('openModal');
+        },
+
+        /**
+         * Convert number into int
+         *
+         * @param stepNumber
+         */
+        setStep: function (stepNumber) {
+            this.step(+stepNumber);
+        },
+
+        /**
+         * For bind click in template
+         */
+        setFifthStep: function () {
+            this.setStep(5);
+        },
+
+        afterSetStep: function (stepNumber) {
+            if (3 === stepNumber) {
+                this.renderError('');
+            }
+
+            if (1 === stepNumber || 4 === stepNumber) {
+                this.popup.modal('setTitle', this.applyTextToTranslate(this.firstTitlePatter, [this.customer.name()]));
+            } else {
+                this.popup.modal('setTitle', this.applyTextToTranslate(this.secondTitlePatter, [this.customer.name()]));
+            }
+        },
+
+        setSuccessRedirect: function (redirectUrl) {
+            this.success.redirectUrl = redirectUrl;
+        },
+
+        registerWithEmail: function () {
+            var email = (this.step() === 4)
+                ? this.customer.email()
+                : document.getElementById('pslogin_bind_email').value.trim();
+
+            if (email) {
+                var postData = {
+                    email: email,
+                    type: this.customer.type,
+                    ajax: 1,
+                    step: this.step()
+                };
+
+                $.ajax({
+                    url: this.loginWithEmailUrl,
+                    type: 'POST',
+                    data: postData,
+                    loaderContext: $('#pslogin-bind-email-modal'),
+                    showLoader: true,
+                    context: this,
+
+                    /** @inheritdoc */
+                    success: function (responseData) {
+                        if (!this.validateResponse(responseData)) {
+                            console.error('Invalid response');
+                            return;
+                        }
+
+                        if (responseData.status) {
+                            if (responseData.data.exist) {
+                                this.customer.email(email);
+                                this.alreadyRegisteredText(
+                                    this.applyTextToTranslate(
+                                        this.alreadyRegisteredPattern,
+                                        [email, this.storeName]
+                                    )
+                                );
+
+                                if (responseData.data.linked_networks) {
+                                    this.linkedNetworksHtml(responseData.data.linked_networks);
+                                }
+
+                                this.setStep(2);
+                                return;
+                            }
+
+                            if (responseData.data.step) {
+                                this.customer.email(email);
+                                this.setStep(responseData.data.step);
+                                return;
+                            }
+
+                            if (responseData.data.redirectUrl && responseData.data.message) {
+                                this.success.redirectUrl = responseData.data.redirectUrl;
+                                this.success.message(responseData.data.message);
+                            } else {
+                                console.error('Invalid data response');
+                            }
+
+                            this.setStep(3);
+                        } else {
+                            console.error(responseData.error);
+                            if (responseData.data.redirectUrl) {
+                                window.location.href = responseData.data.redirectUrl;
+                            }
+                        }
+
+                    },
+
+                    /** @inheritdoc */
+                    error: function (jqXHR, status, error) {
+                        window.console && console.log(status + ': ' + error + '\nResponse text:\n' + jqXHR.responseText);
+                    },
+                });
+            }
+        },
+
+        loginDependOnStep: function () {
+            switch (this.step()) {
+                case 1:
+                    this.registerWithEmail();
+                    break;
+                case 2:
+                    this.loginWithPass();
+                    break;
+                case 5:
+                    this.loginWithPassTakeEmail();
+                    break;
+            }
+        },
+
+        loginWithPassTakeEmail: function () {
+            var email = document.getElementById('pslogin_bind_email').value.trim();
+            this.loginWithPass(email);
+        },
+
+        loginWithPass: function (email) {
+            if (typeof email === 'object') {
+                email = undefined;
+            }
+
+            var password = document.getElementById('pslogin_bind_pass').value.trim();
+
+            if (! password || (typeof email !== 'undefined' && !email)) {
+                var form = document.getElementById('pslogin_bind');
+                if (typeof form.reportValidity === 'function') {
+                    form.reportValidity();
+                }
+
+                return;
+            }
+
+            var postData = {
+                password: password,
+                type: this.customer.type,
+                ajax: 1,
+                email: email
+            };
+
+            $.ajax({
+                url: this.loginWithPassUrl,
+                type: 'POST',
+                data: postData,
+                loaderContext: $('#pslogin-bind-email-modal'),
+                showLoader: true,
+                context: this,
+
+                /** @inheritdoc */
+                success: function (responseData) {
+                    if (! this.validateResponse(responseData)) {
+                        console.error('Invalid response');
+                        return;
+                    }
+
+                    if (responseData.status) {
+                        if (responseData.data.redirectUrl) {
+                            this.setStep(3);
+                            this.renderRedirect(responseData.data.redirectUrl, $.mage.__('Success'));
+                        } else {
+                            console.error('Invalid data response');
+                        }
+                    } else {
+                        this.renderError(responseData.error);
+                        if (responseData.data.redirectUrl) {
+                            this.renderRedirect(responseData.data.redirectUrl, responseData.error);
+                        }
+                    }
+                },
+
+                /** @inheritdoc */
+                error: function (jqXHR, status, error) {
+                    window.console && console.log(status + ': ' + error + '\nResponse text:\n' + jqXHR.responseText);
+                },
+            });
+        },
+
+        /**
+         * @param {{}} data
+         */
+        validateResponse: function (data) {
+            return typeof data === 'object'
+                && data.hasOwnProperty('status')
+                && data.hasOwnProperty('data')
+                && data.hasOwnProperty('error')
+        },
+
+        /**
+         * @param {string} patter
+         * @param {[]}     phrases
+         * @return {string}
+         */
+        applyTextToTranslate: function (patter, phrases) {
+            phrases.forEach(function (phrase, index) {
+                patter = patter.replace('%' + (index + 1), phrase);
+            });
+
+            return patter;
+        },
+
+        renderRedirect: function (redirectUrl, message) {
+            if (message) {
+                setTimeout(function () {
+                    window.location.href = redirectUrl;
+                }, this.successRedirectDelay);
+            } else {
+                window.location.href = redirectUrl;
+            }
+        },
+
+        renderError: function (message) {
+            if (message) {
+                this.error(message);
+                setTimeout(function () {
+                    this.error('');
+                }.bind(this), this.errorMessageLifetime);
+            } else {
+                this.error('');
+            }
+        },
+
+        renderSuccessRedirect: function () {
+            this.renderRedirect(this.success.redirectUrl, true);
+        },
+
+        openForgotPassword: function () {
+            window.open(this.forgotPassUrl);
+        },
+
+        closePrPopupLogin: function () {
+            if (typeof window.plumrocket !== 'undefined'
+                && typeof window.plumrocket.popupLoginControl !== 'undefined'
+            ) {
+                window.plumrocket.popupLoginControl.closeForm();
+            }
+        }
+    });
+});

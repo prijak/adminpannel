@@ -73,7 +73,9 @@
       <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
         <li class=" nav-item"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
         </li>
-        <li class="active"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders</span></a>
+        <li class=" active"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Pending</span></a>
+        </li>
+        <li class=" nav-item"><a href="orderCompleted.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Completed</span></a>
         </li>
         <li class=" nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
         </li>
@@ -124,6 +126,7 @@
                         <th>Address</th>
                         <th>Payment</th>
                         <th>Payment Type</th>
+                        <th> Phone Number </th>
                         <th>Status</th>
                         <th>Email Address</th>
                         <th>Action</th>
@@ -165,6 +168,7 @@
                               </td>
                               <td><?php echo $row['Total']; ?></td>
                               <td><?php echo $row['Payment']; ?></td>
+                              <td> <?php echo $row['phone number']; ?> </td>
                               <td><?php echo $row['status']; ?></td>
                               <td><?php echo $row['Email']; ?></td>
                               <td><input type="Submit" class="btn btn-success btn-min-width mr-1 mb-1" value="View Order"></td>
@@ -222,6 +226,7 @@
                         <th>Address</th>
                         <th>Payment</th>
                         <th>Payment Type</th>
+                        <th> Phone Number </th>
                         <th>Status</th>
                         <th>Email Address</th>
 
@@ -270,6 +275,7 @@
                             </td>
                             <td><?php echo $row['Total']; ?></td>
                             <td><?php echo $row['Payment']; ?></td>
+                            <td> <?php echo $row['phone number']; ?> </td>
                             <td><?php echo $row['status']; ?></td>
                             <td><?php echo $row['Email']; ?></td>
 

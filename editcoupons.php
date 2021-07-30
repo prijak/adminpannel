@@ -8,7 +8,7 @@
   <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
   <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
   <meta name="author" content="ThemeSelect">
-  <title>Edit Product</title>
+  <title>Edit Banners</title>
   <link rel="logo" href="theme-assets/images/ico/logo1.jpeg">
   <link rel="shortcut icon" type="image/x-icon" href="theme-assets/images/ico/logo1.jpeg">
   <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
@@ -29,14 +29,14 @@
 
 <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
 
-
-
   <?php
-  require "connection.php";
+
+  /*
+     require "connection.php";
+      
+      $oid = $_POST['order_id'];
+      */
   ?>
-
-
-
 
   <!-- fixed-top-->
   <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
@@ -59,6 +59,9 @@
 
 
 
+
+
+
   <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
     <div class="navbar-header">
       <ul class="nav navbar-nav flex-row">
@@ -76,14 +79,16 @@
         </li>
         <li class=" nav-item"><a href="orderCompleted.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Completed</span></a>
         </li>
-        <li class=" nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
+        <li class="nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
         </li>
         <li class=" nav-item"><a href="addproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Add Products</span></a>
         </li>
-        <li class="active"><a href="editproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Products</span></a>
+        <li class=" nav-item"><a href="editproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Products</span></a>
         </li>
         <li class=" nav-item"><a href="removeproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Remove Products</span></a>
         </li>
+        <li class=" active"><a href="editcoupons.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Coupon</span></a>
+                </li>
 
       </ul>
     </div>
@@ -94,116 +99,86 @@
     <div class="content-wrapper">
       <div class="content-wrapper-before"></div>
       <div class="content-header row">
+        <div class="content-header-left col-md-4 col-12 mb-2">
+          <h3 class="content-header-title">Update Coupon</h3>
+        </div>
+        <div class="content-header-right col-md-8 col-12">
+          <div class="breadcrumbs-top float-md-right">
+            <div class="breadcrumb-wrapper mr-1">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="adminindex.php">Home</a>
+                </li>
+                <li class="breadcrumb-item active">Banners
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="content-body">
-        <!-- Basic Tables start -->
 
 
 
 
-        <!-- Order table start -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Coupon</h4>
+              <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+              <div class="heading-elements">
+                <ul class="list-inline mb-0">
+                  <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                  <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                  <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
 
-
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h4 class="card-title">Edit Product</h4>
-                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                <div class="heading-elements">
-                  <ul class="list-inline mb-0">
-                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                    <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
-
-                  </ul>
-                </div>
-
-
+                </ul>
               </div>
-              <div class="card-content collapse show">
 
-                <div class="table-responsive">
-                  <table class="table table-bordered mb-0">
-                    <thead>
+
+            </div>
+            <div class="card-content collapse show">
+
+              <div class="table-responsive">
+                <table class="table table-bordered mb-0">
+                  <thead>
+                    <tr>
+                      
+                      <th>Add Coupon</th>
+                      <th>Remove Coupon</th>
+
+                      <th>Edit Coupon</th>
+
+
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <form action="coupon.php" method="post">
                       <tr>
-                        <th>Product ID</th>
-                        <th>Product Name</th>
-                        <th>Mark Out Of Stock</th>
 
-                        <th>Mark Back in Stock</th>
-                        <th>Edit</th>
-
+                        <td> <button type="submit" class="btn btn-success btn-min-width mr-1 mb-1" name="coupounedit" value="addcop">Add Coupon</button> </td>
+                        <td><button type="submit" class="btn btn-danger  btn-min-width mr-1 mb-1" name="coupounedit" value="removecop">Remove Coupon</button></td>
+                        <td><button type="submit" class="btn btn-warning btn-min-width mr-1 mb-1" name="coupounedit" value="editcop">Edit Coupon</button></td>
                       </tr>
-                    </thead>
-                    <tbody>
+                     
 
-                      <?php
-                      $res = mysqli_query($conn, "Select * from products ");
+                    </form>
 
-
-
-
-                      $count = mysqli_num_rows($res);
-                      $tot = array();
-
-
-                      if ($count == 0) {
-                        echo "<h1><center> No Orders Pending </center></h1>";
-                      } else {
-
-
-
-
-
-
-
-
-
-
-                        while ($row = mysqli_fetch_array($res)) {
-
-                      ?>
-                          <form action="edititems.php" method="post">
-
-                            <tr>
-                              <input type="hidden" name="pid" value="<?php echo $row['Product_ID']; ?>">
-                              <td><?php echo $row['Product_ID']; ?></td>
-                              <td><?php echo $row['Product_name']; ?></td>
-                              <td><button type="button" class="btn btn-danger  btn-min-width mr-1 mb-1" name="oof" value="<?php echo $row['Product_ID']; ?>" onClick="document.location.href='stock.php?oof=<?php echo $row['Product_ID']; ?>'" <?php if ($row['status'] == FALSE) echo ("disabled"); ?>>out of stock</button></td>
-
-                              <td> <button type="button" class="btn btn-success btn-min-width mr-1 mb-1" name="bis" value="<?php echo $row['Product_ID']; ?>" onClick="document.location.href='stock.php?bis=<?php echo $row['Product_ID']; ?>'" <?php if ($row['status'] == TRUE) echo ("disabled"); ?>>back in stoc</button> </td>
-
-                              <td><button type="submit" class="btn btn-warning btn-min-width mr-1 mb-1">Go Edit</button></td>
-
-
-                            </tr>
-                          </form>
-
-
-                      <?php
-
-
-                        }
-                      }
-                      ?>
-
-
-                    </tbody>
-                  </table>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-
-
-        <!-- Bordered table end -->
       </div>
+
+
+
+
+      <!-- ////////////////////////////////////////////////////////////////////////////-->
+
     </div>
   </div>
-  <!-- ////////////////////////////////////////////////////////////////////////////-->
-
 
 
 

@@ -64,7 +64,7 @@
   <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
     <div class="navbar-header">
       <ul class="nav navbar-nav flex-row">
-      <li class="nav-item mr-auto"><a class="navbar-brand" href="adminindex.php"><img class="brand-logo" alt="Vestasa admin logo" src="theme-assets/images/logo/logo.jpeg" />
+        <li class="nav-item mr-auto"><a class="navbar-brand" href="adminindex.php"><img class="brand-logo" alt="Vestasa admin logo" src="theme-assets/images/logo/logo.jpeg" />
             <h3 class="brand-text">Vestasa Admin</h3>
           </a></li>
         <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
@@ -72,9 +72,11 @@
     </div>
     <div class="main-menu-content">
       <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-      <li class=" nav-item"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+        <li class=" nav-item"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
         </li>
-        <li class="active"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders</span></a>
+        <li class=" active"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Pending</span></a>
+        </li>
+        <li class=" nav-item"><a href="orderCompleted.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Completed</span></a>
         </li>
         <li class=" nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
         </li>
@@ -173,27 +175,27 @@
                         while ($row = mysqli_fetch_array($res)) {
 
                       ?>
-<form action="orderstatus.php" method="post">
+                          <form action="orderstatus.php" method="post">
 
-                          <tr>
-                          <input type = "hidden" name="oid" value ="<?php echo($oid);?>">
-                            <td><?php echo $row['Product_ID']; ?></td>
-                            <td><?php echo $row['Product_Name']; ?></td>
-                            <td><?php echo $row['Quantity']; ?></td>
-                            <td><?php echo $row['Price']; ?></td>
-
-
-
-                          </tr>
+                            <tr>
+                              <input type="hidden" name="oid" value="<?php echo ($oid); ?>">
+                              <td><?php echo $row['Product_ID']; ?></td>
+                              <td><?php echo $row['Product_Name']; ?></td>
+                              <td><?php echo $row['Quantity']; ?></td>
+                              <td><?php echo $row['Price']; ?></td>
 
 
 
-                      <?php
+                            </tr>
+
+
+
+                        <?php
 
 
                         }
                       }
-                      ?>
+                        ?>
 
 
                     </tbody>
@@ -207,7 +209,7 @@
         <div class="form-group">
           <button type="submit" class="btn btn-warning btn-primary btn-lg btn-block" name="whattodo" value="Packed">Order Packed</button>
           <button type="submit" class="btn btn-warning btn-primary btn-lg btn-block" name="whattodo" value="Out for delivery">Order Dispached</button>
-          <button type="submit" class="btn btn-success btn-primary btn-lg btn-block" name="whattodo" value="Completed" >Order Delivered</button>
+          <button type="submit" class="btn btn-success btn-primary btn-lg btn-block" name="whattodo" value="Completed">Order Delivered</button>
           <button type="submit" class="btn btn-danger btn-primary btn-lg btn-block" name="whattodo" value="Delete">Delete Order</button>
         </div>
         </form>

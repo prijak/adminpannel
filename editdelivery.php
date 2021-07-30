@@ -31,11 +31,11 @@
 
     <?php
 
-
-    session_start();
-    require "connection.php";
-    $whattodo = $_GET['wtd'];
-
+    /*
+     require "connection.php";
+      
+      $oid = $_POST['order_id'];
+      */
     ?>
 
     <!-- fixed-top-->
@@ -73,11 +73,11 @@
         </div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                <li class=" active"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                <li class=" nav-item"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                </li>
                 <li class=" nav-item"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Pending</span></a>
                 </li>
                 <li class=" nav-item"><a href="orderCompleted.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Completed</span></a>
-                </li>
                 </li>
                 <li class="nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
                 </li>
@@ -86,7 +86,12 @@
                 <li class=" nav-item"><a href="editproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Products</span></a>
                 </li>
                 <li class=" nav-item"><a href="removeproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Remove Products</span></a>
+                </li>
+                <li class=" nav-item"><a href="editcoupons.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Coupon</span></a>
+                </li>
 
+                <li class=" active"><a href="editdelivery.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery Charges</span></a>
+                </li>
             </ul>
         </div>
         <div class="navigation-background"></div>
@@ -97,7 +102,7 @@
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
                 <div class="content-header-left col-md-4 col-12 mb-2">
-                    <h3 class="content-header-title">Update Banners</h3>
+                    <h3 class="content-header-title">Update Delivery Charges</h3>
                 </div>
                 <div class="content-header-right col-md-8 col-12">
                     <div class="breadcrumbs-top float-md-right">
@@ -120,7 +125,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Orders Received</h4>
+                            <h4 class="card-title">Delivery Charges</h4>
                             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
                                 <ul class="list-inline mb-0">
@@ -139,74 +144,27 @@
                                 <table class="table table-bordered mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Product Name</th>
-                                            <th>Product Image</th>
 
-                                            <th>Product ID</th>
-                                            <th>Submit</th>
+                                            <th>Add Delivery Location</th>
+                                            <th>Remove Delivery Location</th>
+
+                                            <th>Edit Delivery Location</th>
 
 
                                         </tr>
                                     </thead>
 
                                     <tbody>
+                                        <form action="delivery.php" method="post">
+                                            <tr>
 
-                                        <?php
-                                        //////////////////// new Arrival //////////////
-
-
-                                        $res = mysqli_query($conn, "SELECT * FROM $whattodo");
-
-
-
-
-                                        while ($row = mysqli_fetch_array($res)) {
-
-                                            $id = $row['pid'];
+                                                <td> <button type="submit" class="btn btn-success btn-min-width mr-1 mb-1" name="deledit" value="adddel">Add Delivery Location</button> </td>
+                                                <td><button type="submit" class="btn btn-danger  btn-min-width mr-1 mb-1" name="deledit" value="removedel">Remove Delivery Location</button></td>
+                                                <td><button type="submit" class="btn btn-warning btn-min-width mr-1 mb-1" name="deledit" value="editdel">Edit Delivery Location</button></td>
+                                            </tr>
 
 
-                                            $res1 = mysqli_query($conn, "SELECT * FROM products where Product_ID = $id");
-
-
-
-
-                                            while ($row1 = mysqli_fetch_array($res1)) {
-
-                                        ?>
-                                                <form action="editfrontitem.php" method="post">
-
-
-
-
-                                                    <tr>
-
-
-
-                                                        <input type="hidden" name="oldpid" value="<?php echo $row1['Product_ID']; ?>">
-                                                        <td><input type="text" class="form-control" value="<?php echo $row1['Product_name']; ?>" readonly="readonly" id="basicInput" name="pname"></td>
-                                                        <td><img height="130" width="130" class="" src="theme-assets/images/<?php echo $row1['Image1']; ?>" alt="Error With Image"></td>
-                                                        <td><input type="text" class="form-control" value="<?php echo $row1['Product_ID']; ?>" id="basicInput" name="PID"></td>
-                                                        <td> <button type="submit" class="btn btn-success btn-min-width mr-1 mb-1" name="frontItemtoedit" value="<?php echo $whattodo; ?>">Submit</button> </td>
-
-                                                    </tr>
-
-
-
-                                                </form>
-                                        <?php
-
-                                            }
-                                        }
-                                        /////////////////////////////////////////////////// BestSeller///////////////////////////////
-
-
-
-
-
-
-
-                                        ?>
-
+                                        </form>
 
                                     </tbody>
                                 </table>

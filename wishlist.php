@@ -8,7 +8,7 @@
     <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
     <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>Edit Banners</title>
+    <title>Remove Product</title>
     <link rel="logo" href="theme-assets/images/ico/logo1.jpeg">
     <link rel="shortcut icon" type="image/x-icon" href="theme-assets/images/ico/logo1.jpeg">
     <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
@@ -29,14 +29,13 @@
 
 <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-gradient-x-purple-blue" data-col="2-columns">
 
+
+
     <?php
-
-
-    session_start();
     require "connection.php";
-    $whattodo = $_GET['wtd'];
-
     ?>
+
+
 
     <!-- fixed-top-->
     <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
@@ -59,9 +58,6 @@
 
 
 
-
-
-
     <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
@@ -73,19 +69,23 @@
         </div>
         <div class="main-menu-content">
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                <li class=" active"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                <li class=" nav-item"><a href="adminindex.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+                </li>
                 <li class=" nav-item"><a href="orders.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Pending</span></a>
                 </li>
                 <li class=" nav-item"><a href="orderCompleted.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Orders Completed</span></a>
                 </li>
-                </li>
-                <li class="nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
+                <li class=" nav-item"><a href="banners.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Home Banners</span></a>
                 </li>
                 <li class=" nav-item"><a href="addproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Add Products</span></a>
                 </li>
                 <li class=" nav-item"><a href="editproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Edit Products</span></a>
                 </li>
                 <li class=" nav-item"><a href="removeproduct.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Remove Products</span></a>
+                </li>
+                <li class="active"><a href="wishlist.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Products in Wishlist</span></a>
+                </li>
+
 
             </ul>
         </div>
@@ -96,133 +96,113 @@
         <div class="content-wrapper">
             <div class="content-wrapper-before"></div>
             <div class="content-header row">
-                <div class="content-header-left col-md-4 col-12 mb-2">
-                    <h3 class="content-header-title">Update Banners</h3>
-                </div>
-                <div class="content-header-right col-md-8 col-12">
-                    <div class="breadcrumbs-top float-md-right">
-                        <div class="breadcrumb-wrapper mr-1">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="adminindex.php">Home</a>
-                                </li>
-                                <li class="breadcrumb-item active">Banners
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
             </div>
+            <div class="content-body">
+                <!-- Basic Tables start -->
 
 
+                <!-- Order table start -->
 
 
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Orders Received</h4>
-                            <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
-                            <div class="heading-elements">
-                                <ul class="list-inline mb-0">
-                                    <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
-                                    <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
-                                    <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                <!-- Order table start -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">WishList</h4>
+                                <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                        <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                        <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
 
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
+                            <div class="card-content collapse show">
 
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Product ID</th>
+                                                <th>Product Name</th>
+                                                <TH> Number of Wishes </TH>
 
-                        </div>
-                        <div class="card-content collapse show">
+                                                <th>Send Mail</th>
 
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Product Name</th>
-                                            <th>Product Image</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                            <th>Product ID</th>
-                                            <th>Submit</th>
-
-
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-
-                                        <?php
-                                        //////////////////// new Arrival //////////////
-
-
-                                        $res = mysqli_query($conn, "SELECT * FROM $whattodo");
+                                            <?php
+                                            $res = mysqli_query($conn, "SELECT `ProductId` FROM `wishlist` GROUP BY `ProductId` ");
 
 
 
 
-                                        while ($row = mysqli_fetch_array($res)) {
-
-                                            $id = $row['pid'];
-
-
-                                            $res1 = mysqli_query($conn, "SELECT * FROM products where Product_ID = $id");
+                                            $count = mysqli_num_rows($res);
+                                            $tot = array();
 
 
+                                            if ($count == 0) {
+                                                echo "<h1><center> No Items Available </center></h1>";
+                                            } else {
 
 
-                                            while ($row1 = mysqli_fetch_array($res1)) {
+                                                while ($row = mysqli_fetch_array($res)) {
+                                                    $id = $row['ProductId'];
 
-                                        ?>
-                                                <form action="editfrontitem.php" method="post">
-
-
-
-
-                                                    <tr>
+                                                    $res3 = mysqli_query($conn, "SELECT COUNT('UserID') FROM wishlist WHERE ProductId = $id ");
+                                                    $res2 = mysqli_query($conn, "Select * from products where Product_ID = $id ");
 
 
 
-                                                        <input type="hidden" name="oldpid" value="<?php echo $row1['Product_ID']; ?>">
-                                                        <td><input type="text" class="form-control" value="<?php echo $row1['Product_name']; ?>" readonly="readonly" id="basicInput" name="pname"></td>
-                                                        <td><img height="130" width="130" class="" src="theme-assets/images/<?php echo $row1['Image1']; ?>" alt="Error With Image"></td>
-                                                        <td><input type="text" class="form-control" value="<?php echo $row1['Product_ID']; ?>" id="basicInput" name="PID"></td>
-                                                        <td> <button type="submit" class="btn btn-success btn-min-width mr-1 mb-1" name="frontItemtoedit" value="<?php echo $whattodo; ?>">Submit</button> </td>
+                                                    while ($row2 = mysqli_fetch_array($res2)) {
+                                            ?>
+                                                        <form action="sendwishlistMail.php" method="post">
 
-                                                    </tr>
+                                                            <tr>
+
+                                                                <td><?php echo $row2['Product_ID']; ?></td>
+                                                                <td><?php echo $row2['Product_name']; ?></td>
+
+                                                                <td><?php if ($result = mysqli_query($conn, "SELECT * FROM wishlist WHERE ProductId = $id")) {
+echo  mysqli_num_rows($result); }?></td>
+
+                                                                <td><button type="submit" class="btn btn-success btn-min-width mr-1 mb-1"> Send Mail </button></td>
 
 
+                                                            </tr>
+                                                        </form>
 
-                                                </form>
-                                        <?php
 
+                                            <?php
+
+
+                                                    }
+                                                }
                                             }
-                                        }
-                                        /////////////////////////////////////////////////// BestSeller///////////////////////////////
+                                            ?>
 
 
-
-
-
-
-
-                                        ?>
-
-
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+                <!-- Bordered table end -->
             </div>
-
-
-
-
-            <!-- ////////////////////////////////////////////////////////////////////////////-->
-
         </div>
     </div>
+
+    <!-- ////////////////////////////////////////////////////////////////////////////-->
+
 
 
 
